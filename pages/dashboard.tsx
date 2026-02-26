@@ -150,22 +150,22 @@ export default function Dashboard() {
         {/* Left Column - Main Content */}
         <div className="lg:col-span-2 space-y-6">
           {/* Root Cause Card */}
-          <div className="bg-slate-800 border-2 border-red-500 rounded-lg p-6">
+          <div className="bg-gradient-to-br from-red-950/50 to-slate-900 rounded-xl p-6 shadow-xl">
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
                 <h2 className="text-xl font-bold text-red-400">ROOT CAUSE IDENTIFIED</h2>
               </div>
-              <div className="bg-red-500/20 text-red-400 px-3 py-1 rounded-full text-sm font-semibold">
+              <div className="bg-red-500/20 text-red-400 px-4 py-1.5 rounded-full text-sm font-semibold">
                 {INCIDENT.confidence}% Confidence
               </div>
             </div>
 
-            <h3 className="text-2xl font-bold mb-2">{INCIDENT.diagnosis}</h3>
+            <h3 className="text-2xl font-bold mb-2 text-white">{INCIDENT.diagnosis}</h3>
             <p className="text-slate-300">Equipment: <span className="font-mono text-cyan-400">{INCIDENT.equipment}</span></p>
 
             {/* Historical Context */}
-            <div className="mt-3 bg-slate-900/50 border border-cyan-500/30 rounded-lg p-3">
+            <div className="mt-4 bg-cyan-500/10 rounded-lg p-3">
               <p className="text-sm text-cyan-400">
                 📊 Historical Pattern: Matches 7 previous incidents - all resolved without full SOP cleaning
               </p>
@@ -173,7 +173,7 @@ export default function Dashboard() {
 
             {/* Confidence Bar */}
             <div className="mt-4">
-              <div className="w-full bg-slate-700 rounded-full h-2">
+              <div className="w-full bg-slate-700/50 rounded-full h-2">
                 <div
                   className="bg-gradient-to-r from-red-500 to-orange-500 h-2 rounded-full transition-all duration-1000"
                   style={{ width: `${INCIDENT.confidence}%` }}
@@ -190,13 +190,13 @@ export default function Dashboard() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {SENSORS.map((sensor) => (
-                <div key={sensor.id} className="bg-slate-800 border border-slate-700 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
+                <div key={sensor.id} className="bg-slate-800/50 backdrop-blur rounded-xl p-5 shadow-lg hover:bg-slate-800/70 transition-colors">
+                  <div className="flex items-center justify-between mb-3">
                     {getStatusIcon(sensor.status)}
-                    <span className={`w-2 h-2 rounded-full ${getStatusColor(sensor.status)}`}></span>
+                    <span className={`w-2.5 h-2.5 rounded-full ${getStatusColor(sensor.status)}`}></span>
                   </div>
                   <h3 className="font-semibold text-sm text-slate-400 mb-1">{sensor.name}</h3>
-                  <p className="text-2xl font-bold mb-1">{sensor.value}</p>
+                  <p className="text-2xl font-bold mb-1 text-white">{sensor.value}</p>
                   <p className="text-xs text-slate-500">Normal: {sensor.normal}</p>
                   <p className="text-xs text-slate-400 mt-1 font-mono">{sensor.id}</p>
                 </div>
@@ -209,36 +209,36 @@ export default function Dashboard() {
             <h2 className="text-lg font-bold mb-3">COST COMPARISON</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               {/* Traditional */}
-              <div className="bg-slate-800 border-2 border-red-400/30 rounded-lg p-5">
+              <div className="bg-gradient-to-br from-red-950/30 to-slate-900 rounded-xl p-6 shadow-lg">
                 <div className="text-center">
-                  <p className="text-sm text-slate-400 mb-2">Traditional Approach</p>
-                  <p className="text-3xl font-bold text-red-400 mb-1">{COMPARISON.traditional.time}</p>
-                  <p className="text-2xl font-semibold text-red-300">{COMPARISON.traditional.cost}</p>
-                  <p className="text-sm text-slate-500 mt-2">{COMPARISON.traditional.gallons} discarded</p>
+                  <p className="text-sm text-slate-400 mb-3">Traditional Approach</p>
+                  <p className="text-3xl font-bold text-red-400 mb-2">{COMPARISON.traditional.time}</p>
+                  <p className="text-2xl font-semibold text-red-300 mb-2">{COMPARISON.traditional.cost}</p>
+                  <p className="text-sm text-slate-500">{COMPARISON.traditional.gallons} discarded</p>
                 </div>
               </div>
 
               {/* Ether-Eye */}
-              <div className="bg-slate-800 border-2 border-green-400/50 rounded-lg p-5">
+              <div className="bg-gradient-to-br from-green-950/30 to-slate-900 rounded-xl p-6 shadow-lg">
                 <div className="text-center">
-                  <p className="text-sm text-slate-400 mb-2">Ether-Eye Solution</p>
-                  <p className="text-3xl font-bold text-green-400 mb-1">{COMPARISON.etherEye.time}</p>
-                  <p className="text-2xl font-semibold text-green-300">{COMPARISON.etherEye.cost}</p>
-                  <p className="text-sm text-slate-500 mt-2">{COMPARISON.etherEye.gallons} discarded</p>
+                  <p className="text-sm text-slate-400 mb-3">Ether-Eye Solution</p>
+                  <p className="text-3xl font-bold text-green-400 mb-2">{COMPARISON.etherEye.time}</p>
+                  <p className="text-2xl font-semibold text-green-300 mb-2">{COMPARISON.etherEye.cost}</p>
+                  <p className="text-sm text-slate-500">{COMPARISON.etherEye.gallons} discarded</p>
                 </div>
               </div>
             </div>
 
             {/* Savings */}
-            <div className="bg-gradient-to-r from-green-900/50 to-cyan-900/50 border border-green-500/50 rounded-lg p-4 text-center">
+            <div className="bg-gradient-to-r from-green-900/30 to-cyan-900/30 rounded-xl p-5 text-center shadow-lg">
               <p className="text-sm text-slate-300 mb-1">Total Savings Per Incident</p>
               <p className="text-4xl font-bold text-green-400">{COMPARISON.savings}</p>
             </div>
           </div>
 
           {/* Recovery Checklist */}
-          <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
-            <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+          <div className="bg-slate-800/50 backdrop-blur rounded-xl p-6 shadow-lg">
+            <h2 className="text-lg font-bold mb-4 flex items-center gap-2 text-white">
               ✅ RECOVERY CHECKLIST
             </h2>
             <div className="space-y-3">
@@ -274,8 +274,8 @@ export default function Dashboard() {
 
         {/* Right Column - Chat Sidebar */}
         <div className="lg:col-span-1">
-          <div className="bg-slate-800 border border-slate-700 rounded-lg p-6 sticky top-6">
-            <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+          <div className="bg-slate-800/50 backdrop-blur rounded-xl p-6 sticky top-6 shadow-lg">
+            <h2 className="text-lg font-bold mb-4 flex items-center gap-2 text-white">
               💬 ASK ETHER-EYE
             </h2>
 
@@ -283,21 +283,21 @@ export default function Dashboard() {
             <div className="space-y-3 mb-6">
               <button
                 onClick={() => setActiveResponse(CHAT_RESPONSES.seal)}
-                className="w-full text-left bg-slate-700 hover:bg-slate-600 border border-slate-600 rounded-lg p-3 text-sm transition-colors"
+                className="w-full text-left bg-slate-700/50 hover:bg-slate-700 rounded-lg p-3 text-sm transition-all hover:shadow-lg"
               >
                 Could this be seal failure?
               </button>
 
               <button
                 onClick={() => setActiveResponse(CHAT_RESPONSES.spec)}
-                className="w-full text-left bg-slate-700 hover:bg-slate-600 border border-slate-600 rounded-lg p-3 text-sm transition-colors"
+                className="w-full text-left bg-slate-700/50 hover:bg-slate-700 rounded-lg p-3 text-sm transition-all hover:shadow-lg"
               >
                 What&apos;s the pressure spec?
               </button>
 
               <button
                 onClick={() => setActiveResponse(CHAT_RESPONSES.procedure)}
-                className="w-full text-left bg-slate-700 hover:bg-slate-600 border border-slate-600 rounded-lg p-3 text-sm transition-colors"
+                className="w-full text-left bg-slate-700/50 hover:bg-slate-700 rounded-lg p-3 text-sm transition-all hover:shadow-lg"
               >
                 Show recovery procedure
               </button>
@@ -305,7 +305,7 @@ export default function Dashboard() {
 
             {/* Response Area */}
             {activeResponse && (
-              <div className="bg-slate-900 border border-cyan-500/30 rounded-lg p-4 min-h-[200px]">
+              <div className="bg-cyan-500/10 rounded-lg p-4 min-h-[200px]">
                 <div className="flex items-start gap-2 mb-2">
                   <div className="w-2 h-2 bg-cyan-400 rounded-full mt-2"></div>
                   <p className="text-xs text-cyan-400 font-semibold">ETHER-EYE RESPONSE</p>
@@ -317,7 +317,7 @@ export default function Dashboard() {
             )}
 
             {!activeResponse && (
-              <div className="bg-slate-900 border border-slate-700 rounded-lg p-4 min-h-[200px] flex items-center justify-center">
+              <div className="bg-slate-900/30 rounded-lg p-4 min-h-[200px] flex items-center justify-center">
                 <p className="text-slate-500 text-sm text-center">
                   Click a question above to get instant answers from technical documentation
                 </p>
