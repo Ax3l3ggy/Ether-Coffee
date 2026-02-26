@@ -204,35 +204,79 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Cost Comparison */}
+          {/* Diagnostic Analysis */}
           <div>
-            <h2 className="text-lg font-bold mb-3">COST COMPARISON</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              {/* Traditional */}
-              <div className="bg-gradient-to-br from-red-950/30 to-slate-900 rounded-xl p-6 shadow-lg">
-                <div className="text-center">
-                  <p className="text-sm text-slate-400 mb-3">Traditional Approach</p>
-                  <p className="text-3xl font-bold text-red-400 mb-2">{COMPARISON.traditional.time}</p>
-                  <p className="text-2xl font-semibold text-red-300 mb-2">{COMPARISON.traditional.cost}</p>
-                  <p className="text-sm text-slate-500">{COMPARISON.traditional.gallons} discarded</p>
-                </div>
-              </div>
+            <h2 className="text-lg font-bold mb-3 flex items-center gap-2">
+              🔍 DIAGNOSTIC ANALYSIS
+            </h2>
 
-              {/* Ether-Eye */}
-              <div className="bg-gradient-to-br from-green-950/30 to-slate-900 rounded-xl p-6 shadow-lg">
-                <div className="text-center">
-                  <p className="text-sm text-slate-400 mb-3">Ether-Eye Solution</p>
-                  <p className="text-3xl font-bold text-green-400 mb-2">{COMPARISON.etherEye.time}</p>
-                  <p className="text-2xl font-semibold text-green-300 mb-2">{COMPARISON.etherEye.cost}</p>
-                  <p className="text-sm text-slate-500">{COMPARISON.etherEye.gallons} discarded</p>
+            {/* Analysis Timeline */}
+            <div className="bg-slate-800 border border-slate-700 rounded-lg p-6 mb-4">
+              <h3 className="font-semibold text-cyan-400 mb-4">Root Cause Identification Process</h3>
+              <div className="space-y-4">
+                {/* Step 1 */}
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-sm">1</div>
+                  <div>
+                    <p className="font-semibold text-slate-200">Initial Anomaly Detection</p>
+                    <p className="text-sm text-slate-400 mt-1">Steam pressure sensor PT-4472 reported 15% deviation from normal range (242 PSI vs 285-295 PSI target)</p>
+                  </div>
+                </div>
+
+                {/* Step 2 */}
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-sm">2</div>
+                  <div>
+                    <p className="font-semibold text-slate-200">Correlated Event Analysis</p>
+                    <p className="text-sm text-slate-400 mt-1">Temperature sensor TT-4473 showed 2.3s delayed response, indicating pressure-driven thermal lag rather than independent heating failure</p>
+                  </div>
+                </div>
+
+                {/* Step 3 */}
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-sm">3</div>
+                  <div>
+                    <p className="font-semibold text-slate-200">Eliminated Alternative Causes</p>
+                    <p className="text-sm text-slate-400 mt-1">
+                      • Seal failure ruled out (would show temp + flow anomalies)<br/>
+                      • Boiler malfunction ruled out (other zones normal)<br/>
+                      • Contamination ruled out (no microbial indicators)
+                    </p>
+                  </div>
+                </div>
+
+                {/* Step 4 */}
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-sm">4</div>
+                  <div>
+                    <p className="font-semibold text-slate-200">Pattern Matching</p>
+                    <p className="text-sm text-slate-400 mt-1">Signature matches 7 historical incidents - all resolved by clearing steam trap ST-447 blockage</p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Savings */}
-            <div className="bg-gradient-to-r from-green-900/30 to-cyan-900/30 rounded-xl p-5 text-center shadow-lg">
-              <p className="text-sm text-slate-300 mb-1">Total Savings Per Incident</p>
-              <p className="text-4xl font-bold text-green-400">{COMPARISON.savings}</p>
+            {/* Supporting Evidence */}
+            <div className="bg-slate-800 border border-cyan-500/30 rounded-lg p-5">
+              <h3 className="font-semibold text-cyan-400 mb-3">Supporting Evidence</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                <div className="bg-slate-900/50 p-3 rounded">
+                  <p className="text-slate-400">Zone Isolation</p>
+                  <p className="text-slate-200 font-semibold">Only Zone 4 affected</p>
+                </div>
+                <div className="bg-slate-900/50 p-3 rounded">
+                  <p className="text-slate-400">Failure Mode</p>
+                  <p className="text-slate-200 font-semibold">Gradual pressure drop</p>
+                </div>
+                <div className="bg-slate-900/50 p-3 rounded">
+                  <p className="text-slate-400">Equipment Age</p>
+                  <p className="text-slate-200 font-semibold">ST-447: 14 months since last service</p>
+                </div>
+                <div className="bg-slate-900/50 p-3 rounded">
+                  <p className="text-slate-400">Historical Success Rate</p>
+                  <p className="text-slate-200 font-semibold">100% (7/7 similar incidents)</p>
+                </div>
+              </div>
             </div>
           </div>
 
