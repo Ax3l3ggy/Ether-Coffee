@@ -246,22 +246,24 @@ export default function Investigation() {
                 ))}
               </div>
 
-              {selectedSensor && (
+              {selectedSensor && selectedSensor in SENSOR_DATA && (() => {
+                const sensor = SENSOR_DATA[selectedSensor as keyof typeof SENSOR_DATA];
+                return (
                 <div className="bg-slate-800/50 rounded-xl p-6 shadow-lg">
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <h3 className="text-xl font-bold text-white mb-1">
-                        {SENSOR_DATA[selectedSensor].name}
+                        {sensor.name}
                       </h3>
-                      <p className="text-sm text-slate-400">{SENSOR_DATA[selectedSensor].location}</p>
+                      <p className="text-sm text-slate-400">{sensor.location}</p>
                       <p className="text-xs text-slate-500 mt-1 font-mono">{selectedSensor}</p>
                     </div>
                     <div className={`px-4 py-2 rounded-full text-sm font-semibold ${
-                      SENSOR_DATA[selectedSensor].status === "critical" ? "bg-red-500/20 text-red-400" :
-                      SENSOR_DATA[selectedSensor].status === "warning" ? "bg-amber-500/20 text-amber-400" :
+                      sensor.status === "critical" ? "bg-red-500/20 text-red-400" :
+                      sensor.status === "warning" ? "bg-amber-500/20 text-amber-400" :
                       "bg-green-500/20 text-green-400"
                     }`}>
-                      {SENSOR_DATA[selectedSensor].status.toUpperCase()}
+                      {sensor.status.toUpperCase()}
                     </div>
                   </div>
 
@@ -269,24 +271,24 @@ export default function Investigation() {
                     <div>
                       <p className="text-xs text-slate-400 mb-1">CURRENT</p>
                       <p className="text-3xl font-bold text-white">
-                        {SENSOR_DATA[selectedSensor].current}
-                        <span className="text-lg text-slate-400 ml-1">{SENSOR_DATA[selectedSensor].unit}</span>
+                        {sensor.current}
+                        <span className="text-lg text-slate-400 ml-1">{sensor.unit}</span>
                       </p>
                     </div>
                     <div>
                       <p className="text-xs text-slate-400 mb-1">NORMAL RANGE</p>
                       <p className="text-xl font-semibold text-slate-300">
-                        {Array.isArray(SENSOR_DATA[selectedSensor].normal)
-                          ? `${SENSOR_DATA[selectedSensor].normal[0]}-${SENSOR_DATA[selectedSensor].normal[1]}`
-                          : SENSOR_DATA[selectedSensor].normal[0]
-                        } {SENSOR_DATA[selectedSensor].unit}
+                        {Array.isArray(sensor.normal)
+                          ? `${sensor.normal[0]}-${sensor.normal[1]}`
+                          : sensor.normal[0]
+                        } {sensor.unit}
                       </p>
                     </div>
                     <div>
                       <p className="text-xs text-slate-400 mb-1">TREND</p>
                       <p className="text-xl font-semibold text-red-400 capitalize flex items-center gap-2">
                         <TrendingDown className="w-5 h-5" />
-                        {SENSOR_DATA[selectedSensor].trend}
+                        {sensor.trend}
                       </p>
                     </div>
                   </div>
@@ -295,26 +297,27 @@ export default function Investigation() {
                   <div className="bg-slate-900/50 rounded-lg p-4">
                     <p className="text-sm font-semibold text-slate-400 mb-3">LAST 8 READINGS</p>
                     <div className="flex items-end justify-between h-32 gap-2">
-                      {SENSOR_DATA[selectedSensor].history.map((value: number | string, idx: number) => {
-                        const maxVal = Array.isArray(SENSOR_DATA[selectedSensor].normal)
-                          ? SENSOR_DATA[selectedSensor].normal[1]
+                      {sensor.history.map((value: number | string, idx: number) => {
+                        const maxVal: number = Array.isArray(sensor.normal)
+                          ? sensor.normal[1] as number
                           : 300;
                         const height = typeof value === 'number' ? (value / maxVal) * 100 : 50;
                         return (
                           <div key={idx} className="flex-1 flex flex-col items-center gap-1">
                             <div className={`w-full rounded-t transition-all ${
-                              typeof value === 'string' || (typeof value === 'number' && value < (Array.isArray(SENSOR_DATA[selectedSensor].normal) ? SENSOR_DATA[selectedSensor].normal[0] : 0))
+                              typeof value === 'string' || (typeof value === 'number' && value < (Array.isArray(sensor.normal) ? sensor.normal[0] : 0))
                                 ? "bg-red-500"
                                 : "bg-cyan-500"
                             }`} style={{ height: `${height}%` }}></div>
-                            <p className="text-[10px] text-slate-500">{SENSOR_DATA[selectedSensor].timestamps[idx]}</p>
+                            <p className="text-[10px] text-slate-500">{sensor.timestamps[idx]}</p>
                           </div>
                         );
                       })}
                     </div>
                   </div>
                 </div>
-              )}
+                );
+              })()}
             </div>
           )}
 

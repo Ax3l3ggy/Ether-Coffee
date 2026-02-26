@@ -1,0 +1,56 @@
+/* Palantir-inspired theme overrides */
+
+/* Light mode base */
+.palantir-theme {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --border-primary: #e2e8f0;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-tertiary: #94a3b8;
+  --accent-blue: #2563eb;
+  --accent-green: #16a34a;
+  --accent-red: #dc2626;
+  --accent-amber: #d97706;
+}
+
+/* Clean card borders */
+.palantir-card {
+  background: white;
+  border: 1px solid var(--border-primary);
+  border-radius: 2px;
+}
+
+/* Minimal shadows */
+.palantir-shadow {
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+/* Typography */
+.palantir-heading {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.palantir-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+/* Tabs */
+.palantir-tab {
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.palantir-tab:hover {
+  background: var(--bg-secondary);
+}
+
+.palantir-tab-active {
+  border-bottom-color: var(--accent-blue);
+  color: var(--text-primary);
+}
