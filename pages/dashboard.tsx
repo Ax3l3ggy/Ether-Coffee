@@ -326,6 +326,60 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-800 border-2 border-green-500 rounded-lg p-8 max-w-2xl w-full">
+            <div className="text-center">
+              <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h2 className="text-3xl font-bold text-green-400 mb-2">RECOVERY PLAN APPROVED</h2>
+              <p className="text-slate-300 mb-6">Incident #{INCIDENT.id} - Resolution Authorized</p>
+
+              <div className="bg-slate-900 border border-green-500/30 rounded-lg p-6 mb-6">
+                <div className="grid grid-cols-2 gap-4 text-left">
+                  <div>
+                    <p className="text-sm text-slate-400">Estimated Recovery Time</p>
+                    <p className="text-2xl font-bold text-green-400">{COMPARISON.etherEye.time}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-slate-400">Total Savings</p>
+                    <p className="text-2xl font-bold text-green-400">{COMPARISON.savings}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-slate-400">Product Saved</p>
+                    <p className="text-2xl font-bold text-cyan-400">42K gallons</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-slate-400">Downtime Avoided</p>
+                    <p className="text-2xl font-bold text-cyan-400">5.25 hours</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-green-900/30 border border-green-500/50 rounded-lg p-4 mb-6">
+                <p className="text-sm text-green-400 font-semibold">
+                  ✓ All safety checks completed
+                </p>
+                <p className="text-sm text-slate-300 mt-1">
+                  Recovery procedure initiated. Technicians dispatched to {INCIDENT.equipment}.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setShowSuccessModal(false)}
+                className="bg-slate-700 hover:bg-slate-600 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
