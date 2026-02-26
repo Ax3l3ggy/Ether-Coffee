@@ -287,60 +287,56 @@ This could prevent Line-Stop #2847 ✓
 
 ## Demo Implementation Plan
 
-### Core Demo Features (MVP)
+### Core Demo Features (MVP) - SIMPLIFIED
 
-**1. Incident Dashboard - Main View** ⭐ (Must-have)
-- Real-time incident card showing active Line-Stop
-- Root cause diagnosis with confidence score
-- Supporting evidence panel (sensor readings, correlated events)
-- Recommended recovery protocol with time estimates
-- Safety checklist before restart
+**ONE SINGLE PAGE: The Incident Dashboard**
 
-**2. Live Telemetry Visualization** ⭐ (Must-have)
-- Real-time charts showing key sensor readings (pressure, temperature, flow)
-- Visual highlighting of anomalous sensors
-- Time-series view showing moment of Line-Stop
-- Comparison to baseline/normal operating ranges
+Shows everything in one view:
 
-**3. Conversational Assistant** ⭐ (Must-have for wow-factor)
-- Chat interface for asking questions about the incident
-- Pre-scripted Q&A examples:
-  - "What's the proper steam pressure for Zone 4?"
+**Top Section - The Crisis**
+- Incident header: "LINE-STOP #2847 | Line 3 | Elapsed: 00:04:23"
+- Cost ticker: "$21,150 and counting..."
+
+**Middle Section - The Diagnosis (appears after 3-second "analyzing" animation)**
+- Root cause card with confidence: "Steam Pressure Drop - Zone 4 (94% confidence)"
+- Mini sensor panel: 3-4 key metrics (pressure, temp, flow) with visual status
+- Historical context: "Matches 7 previous incidents - all resolved without full SOP"
+
+**Bottom Section - The Solution**
+- Two side-by-side cards:
+  - ❌ Traditional: "6 hours, 50K gallons, $250K"
+  - ✅ Ether-Eye: "45 min, 8K gallons, $40K"
+- Simple 4-step recovery checklist with checkboxes
+- Big green "APPROVE RECOVERY PLAN" button
+
+**Right Sidebar - The Assistant (wow-factor)**
+- Chat interface with 3 pre-canned question buttons:
+  - "What's the steam pressure spec?"
   - "Could this be a seal failure?"
-  - "Show me the re-sterilization procedure"
-- Responses cite mock technical manual sections
+  - "Show recovery procedure"
+- Click button → instant response with technical manual citation
 
-**4. Simulated Incident Timeline** (Nice-to-have)
-- Animated playback of the incident unfolding
-- Shows progression from normal operation → anomaly detection → Line-Stop
-- Demonstrates predictive monitoring catching early warning signs
-- Play/pause controls for presentation
+### ONE Demo Scenario
 
-**5. Cost Impact Calculator** (Nice-to-have for business value)
-- Shows real-time cost ticker during Line-Stop
-- Compares:
-  - Traditional recovery: 4-6 hrs, 50K gal lost, $250K cost
-  - Ether-Eye recovery: 30 min, 8K gal lost, $40K cost
-- Visual savings counter
-
-### Demo Scenarios (Pre-Scripted)
-
-**Scenario A: Steam Pressure Drop** (Primary demo path)
+**Scenario A: Steam Pressure Drop** (Only one needed)
 - Line 3 stops due to Zone 4 steam pressure anomaly
 - AI diagnoses blocked steam trap ST-447 (94% confidence)
 - Recovery: Localized re-sterilization (45 min vs 6 hrs)
 - Outcome: 37K gallons saved, $210K cost avoidance
 
-**Scenario B: Transient Sensor Glitch** (Shows AI preventing false positive)
-- Line 5 shows temperature alarm
-- AI identifies sensor malfunction, not sterility threat
-- Recovery: Sensor replacement only, no SOP cleaning needed
-- Outcome: Prevented unnecessary 6-hour shutdown
+**Demo Flow:**
+1. Page loads showing "analyzing..." (3 seconds)
+2. Diagnosis appears with all info visible (no scrolling)
+3. Presenter clicks 2-3 chat questions to show assistant
+4. Presenter checks off safety items
+5. Clicks "Approve" → success state with savings summary
 
-**Scenario C: Predictive Alert** (Wow-factor feature)
-- Shows early warning 45 minutes before potential Line-Stop
-- AI recommends preventive action during scheduled changeover
-- Demonstrates proactive value proposition
+**CUTTING:**
+- ❌ Multiple scenarios (just do one well)
+- ❌ Animated timeline playback (too complex)
+- ❌ Real-time chart animations (static charts are fine)
+- ❌ Predictive monitoring mode (save for "future roadmap" slide)
+- ❌ Separate pages/routes (everything on one page)
 
 ---
 
@@ -413,7 +409,7 @@ This could prevent Line-Stop #2847 ✓
 
 ---
 
-## Out of Scope (Demo)
+## Out of Scope (Demo) - UPDATED
 
 **Not Building:**
 - Real backend/API integration
@@ -424,150 +420,119 @@ This could prevent Line-Stop #2847 ✓
 - PDF document processing
 - Real-time WebSocket connections
 - Mobile native app
-- Multi-user collaboration features
-- Admin/management analytics dashboard (can be static mockup if time permits)
+- Multiple pages/routes
+- Admin/management analytics dashboard
+- Historical incident log viewer
+- User settings/preferences
+- Multi-scenario switching
+- Animated charts (static is fine)
+- Predictive monitoring mode (mention as "future" only)
 
-**Simulating Instead:**
-- All telemetry data (static JSON files)
-- AI analysis (pre-written responses)
-- Chat interactions (scripted Q&A pairs)
-- Real-time updates (timed animations)
-- Historical incident data (mock dataset)
+**Building:**
+- ✅ ONE page showing ONE incident
+- ✅ 3-second loading animation
+- ✅ Static sensor readings (no live updates)
+- ✅ 3 pre-canned chat responses
+- ✅ Simple checkboxes for recovery steps
+- ✅ Cost comparison cards
+- ✅ "Simulate Line-Stop" button to trigger demo
+- ✅ Success state after approval
+
+**Total Components Needed:**
+1. Main layout (dark industrial theme)
+2. Incident header card
+3. Diagnosis card with confidence bar
+4. Sensor panel (3-4 small metric cards)
+5. Comparison cards (traditional vs Ether-Eye)
+6. Recovery checklist
+7. Chat sidebar (3 buttons, 1 response area)
+8. Approve button + success modal
+
+**Estimated Build Time: 4-6 hours** (with shadcn/ui components)
 
 ---
 
-## Mock Data Specifications
+## Simplified Mock Data (Can be inline in code, no separate files needed)
 
-### Sensor Telemetry (sensors.json)
+**Option 1: Hardcode everything in React state** (Recommended)
+- Faster to build
+- No file I/O
+- Just define objects in the component
+
+**Option 2: One simple JSON file** (if you prefer)
 ```json
 {
-  "line_3": {
-    "zone_4_steam_pressure": {
-      "sensor_id": "PT-4472",
-      "location": "Sterilization Tunnel Zone 4",
-      "normal_range": [285, 295],
-      "critical_threshold": 280,
-      "sterility_threshold": 275,
-      "current_reading": 242,
-      "timestamp": "2026-02-26T14:23:47Z",
-      "status": "critical"
-    },
-    "zone_4_temperature": {
-      "sensor_id": "TT-4473",
-      "current_reading": 134,
-      "normal_range": [137, 139],
-      "status": "warning"
-    }
-    // ... 55,000 sensors (in reality, ~20 key sensors for demo)
-  }
-}
-```
-
-### Incident Scenarios (incidents.json)
-```json
-{
-  "scenario_a": {
-    "id": "INC-2847",
+  "incident": {
+    "id": "2847",
     "line": "Line 3",
-    "station": "Aseptic Fill Station Alpha",
-    "timestamp": "2026-02-26T14:23:47Z",
-    "root_cause": {
-      "diagnosis": "Steam Pressure Drop in Sterilization Tunnel (Zone 4)",
-      "confidence": 0.94,
-      "primary_sensor": "PT-4472",
-      "affected_equipment": "Steam Trap ST-447"
-    },
-    "recovery_protocol": {
-      "type": "short",
-      "estimated_time": 45,
-      "steps": [
-        "Inspect steam trap ST-447 for blockage",
-        "Verify boiler output pressure at header",
-        "Run Zone 4 re-sterilization cycle (localized)",
-        "Validate sensor readings return to baseline"
-      ]
-    },
-    "cost_impact": {
-      "traditional": {
-        "time_hours": 5.5,
-        "product_loss_gallons": 50000,
-        "cost_usd": 250000
-      },
-      "ether_eye": {
-        "time_hours": 0.75,
-        "product_loss_gallons": 8000,
-        "cost_usd": 40000
-      }
-    }
+    "diagnosis": "Steam Pressure Drop in Sterilization Tunnel (Zone 4)",
+    "confidence": 94,
+    "equipment": "Steam Trap ST-447",
+    "traditional_cost": 250000,
+    "ether_eye_cost": 40000,
+    "savings": 210000
+  },
+  "sensors": [
+    {"id": "PT-4472", "name": "Steam Pressure", "value": 242, "normal": "285-295 PSI", "status": "critical"},
+    {"id": "TT-4473", "name": "Zone 4 Temp", "value": 134, "normal": "137-139°C", "status": "warning"},
+    {"id": "FT-4401", "name": "Flow Rate", "value": 95, "normal": "90-100 GPM", "status": "normal"}
+  ],
+  "recovery_steps": [
+    "Inspect steam trap ST-447 for blockage",
+    "Verify boiler output pressure at header",
+    "Run Zone 4 re-sterilization cycle",
+    "Validate sensor readings return to baseline"
+  ],
+  "chat_responses": {
+    "seal_failure": "No - seal failures show temperature AND flow anomalies. We're only seeing pressure drop in Zone 4. Historical data shows this pattern matches steam trap blockages (7 previous incidents).",
+    "pressure_spec": "According to Technical Manual TM-4472 (Section 3.2.4, Page 87):\n\n• Operating pressure: 285-295 PSI\n• Critical threshold: 280 PSI\n• Sterility compromise: <275 PSI for >30 seconds\n\nCurrent reading: 242 PSI ⚠️ BELOW CRITICAL",
+    "recovery_procedure": "Zone 4 Re-Sterilization Protocol (TM-4472:134):\n\n1. Isolate Zone 4 from production line\n2. Increase steam flow to 110% for 10 minutes\n3. Hold at 290 PSI for 15 minutes\n4. Run 3 validation cycles with test bottles\n5. Visual inspection of all seals\n\nEstimated time: 45 minutes"
   }
 }
 ```
 
-### Chat Responses (chat_library.json)
-```json
-{
-  "zone_4_pressure_spec": {
-    "question_pattern": "steam pressure|pressure range|zone 4 spec",
-    "response": "According to Technical Manual TM-4472 (Section 3.2.4, Page 87):\n\nZone 4 Sterilization Tunnel Requirements:\n• Operating pressure: 285-295 PSI\n• Critical low threshold: 280 PSI (triggers alarm)\n• Sterility compromise threshold: <275 PSI for >30 seconds\n\nCurrent reading: 242 PSI ⚠️ BELOW CRITICAL",
-    "citations": ["TM-4472:87"]
-  }
-}
-```
+**Recommendation**: Start with hardcoded data in React component, only move to JSON if you have time.
 
 ---
 
-## Demo Presentation Flow
+## Demo Presentation Flow (5 Minutes Total)
 
-### Act 1: The Crisis (0-2 minutes)
-**Show the problem**
-- Open to monitoring view showing all lines running normally
-- Trigger Line-Stop event (button click or auto-play)
-- Screen transitions to Incident Dashboard
-- Emphasize: "This just cost $5,000... and counting"
+### Setup (Before demo starts)
+- Browser open to dashboard
+- Page shows "SYSTEM READY - Monitoring 8 production lines"
+- Big red "SIMULATE LINE-STOP" button visible
 
-### Act 2: The Diagnosis (2-5 minutes)
-**Show the intelligence**
-- AI analysis animation (3-5 seconds of "processing")
-- Root cause appears with 94% confidence
-- Walk through supporting evidence:
-  - Sensor readings visualization
-  - Historical pattern matching ("We've seen this 7 times")
-  - Rule-out logic (why it's NOT other failure modes)
-- Show recommended recovery path vs. traditional full SOP cleaning
+### Act 1: Trigger the Crisis (0:30)
+- Click "SIMULATE LINE-STOP" button
+- Screen updates to incident view
+- Call out: "Line just stopped. In 5 minutes, this will cost $25,000. Let's see what Ether-Eye finds."
 
-### Act 3: The Assistant (5-7 minutes)
-**Show the domain expertise**
-- Open chat interface
-- Ask: "What's the proper steam pressure for Zone 4?"
-  - AI responds with technical manual citation
-- Ask: "Could this be a seal failure instead?"
-  - AI explains why evidence doesn't support that diagnosis
-- Ask: "Walk me through the Zone 4 re-sterilization procedure"
-  - AI provides step-by-step protocol
+### Act 2: The Diagnosis (1:00)
+- 3-second "analyzing" spinner
+- Diagnosis appears: Steam pressure drop, 94% confidence
+- Point out: "In seconds, not hours, we know it's Zone 4 steam trap"
+- Highlight: "Matches 7 previous incidents - all resolved quickly"
 
-### Act 4: The Recovery (7-9 minutes)
-**Show the transformation**
-- Display safety checklist
-- Check off items (simulate technician completing tasks)
-- Show cost savings counter
-- Final comparison slide:
-  - ❌ Old way: 4-6 hours, 50K gallons, $250K loss
-  - ✅ Ether-Eye: 30 minutes, 8K gallons, $40K loss
-  - **Net savings: $210K per incident**
+### Act 3: The Assistant (2:00)
+- Click chat question: "Could this be a seal failure?"
+- AI responds: "No - seal failures show temperature and flow anomalies. We're only seeing pressure drop."
+- Click: "What's the steam pressure spec?"
+- AI shows technical manual citation
+- Say: "400 pages of technical docs, instant answers"
 
-### Act 5: The Wow Factor (9-10 minutes)
-**Show the future vision**
-- Switch to Scenario C: Predictive monitoring
-- Show early warning alert 45 minutes before Line-Stop
-- Demonstrate prevention vs. reaction
-- Close with: "What if we could prevent these incidents entirely?"
+### Act 4: The Decision (1:00)
+- Point to comparison cards:
+  - Traditional: 6 hrs, $250K loss
+  - Ether-Eye: 45 min, $40K loss
+- Say: "$210K saved per incident"
+- Check off safety items, click "Approve"
 
-### Presentation Tips
-- Use keyboard shortcuts or click areas to advance demo smoothly
-- Pre-load all data (no API calls that could fail)
-- Have static screenshots as backup
-- Practice the narrative flow 3-4 times
-- Time the demo to 8-9 minutes, leaving 1-2 min for questions
+### Act 5: Close (0:30)
+- Success screen shows: "Recovery plan approved - savings: $210K"
+- Final message: "From hours of guesswork to minutes of confidence"
+- Optional: "Next step: predictive alerts to prevent these entirely"
+
+**One-sentence backup**: If demo fails, say: "The core value is turning a data blizzard into a single confident recommendation, saving 5+ hours and $200K+ per incident."
 
 ---
 
