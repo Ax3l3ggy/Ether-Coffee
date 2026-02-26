@@ -1,5 +1,4 @@
 'use client';
-import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { Activity, Droplets, Thermometer, Gauge, AlertTriangle, Search, Zap } from 'lucide-react';
 
