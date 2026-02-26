@@ -1,33 +1,13 @@
-import { Flex, Link, Text } from '@scale/scaleui-radix';
-import { BrandLogo } from '@scale/scaleui-radix';
-
 const Header = () => {
   return (
-    <Flex
-      gap="5"
-      px="4"
-      height="64px"
-      align="center"
-      className="border border-solid border-neutral-5"
-    >
-      <Flex gap="1" align="center">
-        <BrandLogo size="3" className="m-1.5" />
-        <Text size="5" weight="medium">
-          App name
-        </Text>
-      </Flex>
-      <Flex flexGrow="1" align="center" gap="6" justify="center">
-        <Link href="/demo1" color="neutral">
-          Demo Page 1
-        </Link>
-        <Link href="/demo2" color="neutral">
-          Demo Page 2
-        </Link>
-        <Link href="/demo3" color="neutral">
-          Demo Page 3
-        </Link>
-      </Flex>
-    </Flex>
+    <header className="flex gap-5 px-4 h-16 items-center border-b border-border">
+      <div className="flex gap-2 items-center">
+        <div className="w-6 h-6 bg-primary rounded" />
+        <span className="text-xl font-medium">
+          Ether Coffee
+        </span>
+      </div>
+    </header>
   );
 };
 
