@@ -302,10 +302,11 @@ export default function Investigation() {
                           ? sensor.normal[1] as number
                           : 300;
                         const height = typeof value === 'number' ? (value / maxVal) * 100 : 50;
+                        const minVal: number = Array.isArray(sensor.normal) ? sensor.normal[0] as number : 0;
                         return (
                           <div key={idx} className="flex-1 flex flex-col items-center gap-1">
                             <div className={`w-full rounded-t transition-all ${
-                              typeof value === 'string' || (typeof value === 'number' && value < (Array.isArray(sensor.normal) ? sensor.normal[0] : 0))
+                              typeof value === 'string' || (typeof value === 'number' && value < minVal)
                                 ? "bg-red-500"
                                 : "bg-cyan-500"
                             }`} style={{ height: `${height}%` }}></div>
