@@ -6,11 +6,14 @@ export default function Home() {
       <h1 className="text-6xl font-bold">
         Ether Coffee
       </h1>
+      <p className="text-xl text-slate-400 text-center max-w-2xl">
+        AI-powered industrial diagnostic system for aseptic production lines
+      </p>
       <Link
-        href="/dashboard"
-        className="px-8 py-4 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg transition-colors text-lg"
+        href="/monitoring"
+        className="px-12 py-5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-semibold rounded-xl transition-all text-xl shadow-xl transform hover:scale-105"
       >
-        View Incident Dashboard →
+        Launch Monitoring System →
       </Link>
     </div>
   );
