@@ -134,13 +134,13 @@ export default function Investigation() {
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100">
       {/* Header */}
-      <header className="border-b border-slate-700 bg-slate-800 px-6 py-4">
-        <div className="flex items-center justify-between">
+      <header className="border-b border-slate-700 bg-slate-800">
+        <div className="px-6 py-4 flex items-center justify-between border-b border-slate-700">
           <div>
             <div className="flex items-center gap-3">
               <AlertTriangle className="w-8 h-8 text-red-500 animate-pulse" />
               <div>
-                <h1 className="text-2xl font-bold text-red-400">INCIDENT #2847 - INVESTIGATION MODE</h1>
+                <h1 className="text-2xl font-bold text-red-400">INCIDENT #2847</h1>
                 <p className="text-slate-300 mt-1">Line 3 - Aseptic Fill Station Alpha | Stopped: 14:23:47 PST</p>
               </div>
             </div>
@@ -150,6 +150,30 @@ export default function Investigation() {
             <p className="text-3xl font-bold text-red-400 font-mono">00:04:23</p>
             <p className="text-sm text-amber-400 mt-1">Cost: $21,915</p>
           </div>
+        </div>
+
+        {/* Navigation Tabs */}
+        <div className="px-6 flex gap-1">
+          <button
+            onClick={() => router.push('/')}
+            className="px-6 py-3 text-slate-400 hover:text-slate-300 hover:bg-slate-700/50 transition-colors rounded-t-lg"
+          >
+            <Activity className="w-4 h-4 inline mr-2" />
+            Monitoring
+          </button>
+          <button
+            className="px-6 py-3 text-cyan-400 bg-slate-900 border-t-2 border-cyan-400 font-semibold rounded-t-lg"
+          >
+            <Search className="w-4 h-4 inline mr-2" />
+            Investigation
+          </button>
+          <button
+            onClick={() => router.push('/dashboard')}
+            className="px-6 py-3 text-slate-400 hover:text-slate-300 hover:bg-slate-700/50 transition-colors rounded-t-lg"
+          >
+            <Zap className="w-4 h-4 inline mr-2" />
+            Recovery Plan
+          </button>
         </div>
       </header>
 

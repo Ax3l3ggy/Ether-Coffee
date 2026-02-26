@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { AlertCircle, ThermometerSun, Gauge, Activity, Loader2 } from 'lucide-react';
+import { useRouter } from 'next/router';
+import { AlertCircle, ThermometerSun, Gauge, Activity, Loader2, Search, Zap, AlertTriangle } from 'lucide-react';
 
 // Hardcoded data
 const INCIDENT = {
@@ -41,6 +42,7 @@ const CHAT_RESPONSES = {
 };
 
 export default function Dashboard() {
+  const router = useRouter();
   const [activeResponse, setActiveResponse] = useState<string>("");
   const [isAnalyzing, setIsAnalyzing] = useState(true);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
@@ -129,19 +131,48 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100">
       {/* Header */}
-      <header className="border-b border-slate-700 bg-slate-800 px-6 py-4">
-        <div className="flex items-center justify-between">
+      <header className="border-b border-slate-700 bg-slate-800">
+        <div className="px-6 py-4 flex items-center justify-between border-b border-slate-700">
           <div>
-            <h1 className="text-2xl font-bold text-red-400">ETHER-EYE | INCIDENT #{INCIDENT.id}</h1>
-            <p className="text-slate-300 mt-1">
-              {INCIDENT.line} - {INCIDENT.station} | Stopped: {INCIDENT.timestamp}
-            </p>
+            <div className="flex items-center gap-3">
+              <AlertTriangle className="w-8 h-8 text-red-500 animate-pulse" />
+              <div>
+                <h1 className="text-2xl font-bold text-red-400">INCIDENT #{INCIDENT.id}</h1>
+                <p className="text-slate-300 mt-1">
+                  {INCIDENT.line} - {INCIDENT.station} | Stopped: {INCIDENT.timestamp}
+                </p>
+              </div>
+            </div>
           </div>
           <div className="text-right">
             <p className="text-sm text-slate-400">Elapsed Time</p>
             <p className="text-3xl font-bold text-red-400 font-mono">{formatElapsedTime(elapsedSeconds)}</p>
             <p className="text-sm text-amber-400 mt-1">Cost: ${calculateLiveCost(elapsedSeconds)}</p>
           </div>
+        </div>
+
+        {/* Navigation Tabs */}
+        <div className="px-6 flex gap-1">
+          <button
+            onClick={() => router.push('/')}
+            className="px-6 py-3 text-slate-400 hover:text-slate-300 hover:bg-slate-700/50 transition-colors rounded-t-lg"
+          >
+            <Activity className="w-4 h-4 inline mr-2" />
+            Monitoring
+          </button>
+          <button
+            onClick={() => router.push('/investigation')}
+            className="px-6 py-3 text-slate-400 hover:text-slate-300 hover:bg-slate-700/50 transition-colors rounded-t-lg"
+          >
+            <Search className="w-4 h-4 inline mr-2" />
+            Investigation
+          </button>
+          <button
+            className="px-6 py-3 text-cyan-400 bg-slate-900 border-t-2 border-cyan-400 font-semibold rounded-t-lg"
+          >
+            <Zap className="w-4 h-4 inline mr-2" />
+            Recovery Plan
+          </button>
         </div>
       </header>
 
