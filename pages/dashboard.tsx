@@ -1,6 +1,6 @@
 'use client';
-import { useState } from 'react';
-import { AlertCircle, ThermometerSun, Gauge, Activity } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { AlertCircle, ThermometerSun, Gauge, Activity, Loader2 } from 'lucide-react';
 
 // Hardcoded data
 const INCIDENT = {
@@ -42,6 +42,53 @@ const CHAT_RESPONSES = {
 
 export default function Dashboard() {
   const [activeResponse, setActiveResponse] = useState<string>("");
+  const [isAnalyzing, setIsAnalyzing] = useState(true);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [checkedSteps, setCheckedSteps] = useState<boolean[]>([false, false, false, false]);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  // Initial 3-second analyzing animation
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsAnalyzing(false);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Elapsed time counter (starts after analyzing)
+  useEffect(() => {
+    if (!isAnalyzing) {
+      const interval = setInterval(() => {
+        setElapsedSeconds(prev => prev + 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [isAnalyzing]);
+
+  const formatElapsedTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  };
+
+  const calculateLiveCost = (seconds: number) => {
+    // $250K over 6 hours = ~$11.57 per second
+    const costPerSecond = 11.57;
+    const totalCost = Math.floor(seconds * costPerSecond);
+    return totalCost.toLocaleString();
+  };
+
+  const toggleCheckbox = (index: number) => {
+    const newChecked = [...checkedSteps];
+    newChecked[index] = !newChecked[index];
+    setCheckedSteps(newChecked);
+  };
+
+  const allStepsChecked = checkedSteps.every(step => step);
+
+  const handleApprove = () => {
+    setShowSuccessModal(true);
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -61,6 +108,24 @@ export default function Dashboard() {
     }
   };
 
+  // Show analyzing state
+  if (isAnalyzing) {
+    return (
+      <div className="min-h-screen bg-slate-900 text-slate-100 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-16 h-16 text-cyan-400 animate-spin mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-cyan-400 mb-2">ANALYZING INCIDENT DATA</h2>
+          <p className="text-slate-400">Processing 55,000 sensor readings...</p>
+          <div className="mt-4 flex items-center justify-center gap-2">
+            <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+            <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100">
       {/* Header */}
@@ -71,6 +136,11 @@ export default function Dashboard() {
             <p className="text-slate-300 mt-1">
               {INCIDENT.line} - {INCIDENT.station} | Stopped: {INCIDENT.timestamp}
             </p>
+          </div>
+          <div className="text-right">
+            <p className="text-sm text-slate-400">Elapsed Time</p>
+            <p className="text-3xl font-bold text-red-400 font-mono">{formatElapsedTime(elapsedSeconds)}</p>
+            <p className="text-sm text-amber-400 mt-1">Cost: ${calculateLiveCost(elapsedSeconds)}</p>
           </div>
         </div>
       </header>
@@ -195,7 +265,7 @@ export default function Dashboard() {
                 onClick={() => setActiveResponse(CHAT_RESPONSES.spec)}
                 className="w-full text-left bg-slate-700 hover:bg-slate-600 border border-slate-600 rounded-lg p-3 text-sm transition-colors"
               >
-                What's the pressure spec?
+                What&apos;s the pressure spec?
               </button>
 
               <button
