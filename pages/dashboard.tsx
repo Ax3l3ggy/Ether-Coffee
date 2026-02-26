@@ -164,6 +164,13 @@ export default function Dashboard() {
             <h3 className="text-2xl font-bold mb-2">{INCIDENT.diagnosis}</h3>
             <p className="text-slate-300">Equipment: <span className="font-mono text-cyan-400">{INCIDENT.equipment}</span></p>
 
+            {/* Historical Context */}
+            <div className="mt-3 bg-slate-900/50 border border-cyan-500/30 rounded-lg p-3">
+              <p className="text-sm text-cyan-400">
+                📊 Historical Pattern: Matches 7 previous incidents - all resolved without full SOP cleaning
+              </p>
+            </div>
+
             {/* Confidence Bar */}
             <div className="mt-4">
               <div className="w-full bg-slate-700 rounded-full h-2">
@@ -237,11 +244,31 @@ export default function Dashboard() {
             <div className="space-y-3">
               {RECOVERY_STEPS.map((step, index) => (
                 <label key={index} className="flex items-start gap-3 cursor-pointer hover:bg-slate-700/50 p-2 rounded transition-colors">
-                  <input type="checkbox" className="mt-1 w-4 h-4 rounded border-slate-600 bg-slate-700" />
-                  <span className="text-slate-300">{step}</span>
+                  <input
+                    type="checkbox"
+                    checked={checkedSteps[index]}
+                    onChange={() => toggleCheckbox(index)}
+                    className="mt-1 w-4 h-4 rounded border-slate-600 bg-slate-700 accent-green-500"
+                  />
+                  <span className={`${checkedSteps[index] ? 'line-through text-slate-500' : 'text-slate-300'}`}>
+                    {step}
+                  </span>
                 </label>
               ))}
             </div>
+
+            {/* Approve Button */}
+            <button
+              onClick={handleApprove}
+              disabled={!allStepsChecked}
+              className={`w-full mt-6 py-4 rounded-lg font-bold text-lg transition-all ${
+                allStepsChecked
+                  ? 'bg-green-600 hover:bg-green-700 text-white cursor-pointer'
+                  : 'bg-slate-700 text-slate-500 cursor-not-allowed'
+              }`}
+            >
+              {allStepsChecked ? '✓ APPROVE RECOVERY PLAN' : '⚠️ COMPLETE ALL CHECKS TO APPROVE'}
+            </button>
           </div>
         </div>
 
