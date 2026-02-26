@@ -1,39 +1,91 @@
-# :space_invader: Scale Vercel Template :space_invader:
+# Ether-Eye: AI-Powered Industrial Diagnostics Demo
 
-This is the Scale Vercel Template. It is based off of the [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app), but modified to use the Scale UI Radix components/theme.
+A Next.js demo application showcasing AI-powered Line-Stop incident diagnosis for industrial aseptic filling operations.
 
-This template includes examples of:
-- Dynamic routing
-- File uploads
-- GET/POST API calls
+## Overview
 
-The template deployment in Vercel can be viewed at https://vercel-template-gold-delta.vercel.app/. 
+Ether-Eye transforms industrial Line-Stop recovery from hours of manual investigation to minutes of intelligent root cause analysis, saving $210K per incident.
 
-## :bulb: Getting Started
+**Demo**: Interactive dashboard showing AI diagnosis, sensor analysis, cost comparison, and guided recovery protocols.
 
-1. `yarn install`
-2. Then run the development server with `yarn dev`
+## Quick Start
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```bash
+npm install
+npm run dev
+```
 
-The page auto-updates as you edit the file.
+Open [http://localhost:3001](http://localhost:3001)
 
-## :seedling: Environment Variables
+## Features
 
-You can define environment variables for each Vercel project. Any sensitive information should be stored as an environment variable and not hardcoded in the codebase.
+### Dashboard (`/dashboard`)
+- **3-second AI analysis animation** - Simulates processing 55,000 sensors
+- **Live metrics** - Real-time elapsed time and cost accumulation
+- **Root cause diagnosis** - 94% confidence AI recommendation
+- **Sensor monitoring** - Color-coded status (critical/warning/normal)
+- **Cost comparison** - Traditional (6hrs, $250K) vs Ether-Eye (45min, $40K)
+- **AI chat assistant** - 3 pre-scripted technical queries with instant responses
+- **Interactive checklist** - 4-step recovery protocol with functional checkboxes
+- **Approval workflow** - Smart button enables when all safety checks complete
+- **Success modal** - Shows $210K savings and recovery metrics
 
-[Vercel Environment Variable Documentation](https://vercel.com/docs/projects/environment-variables)
+### Demo Flow (2 minutes)
+1. Page loads → 3-second analyzing animation
+2. Dashboard appears with diagnosis and live counters
+3. Click chat questions to show AI assistant
+4. Check off all 4 recovery steps
+5. Click "APPROVE RECOVERY PLAN"
+6. Success modal shows savings summary
 
-## :rocket: Deploy on Vercel
+## Tech Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Framework**: Next.js 15 (Pages Router)
+- **Styling**: Tailwind CSS
+- **Components**: shadcn/ui
+- **Icons**: Lucide React
+- **State**: React hooks (useState, useEffect)
+- **Deployment**: Vercel-ready
 
-Steps to Deploy:
-1. Request Vercel-Admin access on Opal
-2. Add New Project
-3. Import Git Repository -> scaleapi/<project-name>
-4. If the repo isn't found, click Configure Github App -> scaleapi (Configure) -> Select repository -> Update Access. Ask Security to approve Vercel access to the repo. 
-5. Set Build Command to `./vercel-build.sh`.
-6. Set the Environment Variables to the three keys defined in the "Vercel keys Codeartifact access" 1Password shared vault.
-7. Define other environment variables.
-8. Deploy!
+## Project Structure
+
+```
+pages/
+├── index.tsx          # Landing page with link to dashboard
+├── dashboard.tsx      # Main incident dashboard (all features)
+└── _app.tsx          # App wrapper with dark theme
+
+components/
+├── header.tsx        # App header
+└── sidebar.tsx       # Navigation sidebar
+
+PRD.md                # Full product requirements
+MVP-1-HOUR.md         # 1-hour build specification
+```
+
+## Key Metrics (Demo Data)
+
+- **Diagnosis Time**: Seconds vs 2-4 hours (traditional)
+- **Recovery Time**: 45 minutes vs 6 hours
+- **Cost Savings**: $210,000 per incident
+- **Product Saved**: 42,000 gallons
+- **AI Confidence**: 94%
+
+## Environment
+
+- Node.js 18+
+- npm or yarn
+- Port 3001 (3000 fallback)
+
+## Deploy to Vercel
+
+```bash
+git push origin main
+```
+
+Connect repo to Vercel and deploy automatically.
+
+---
+
+**Built with**: Next.js, Tailwind, shadcn/ui
+**Demo Purpose**: VC/investor presentation, technical validation
