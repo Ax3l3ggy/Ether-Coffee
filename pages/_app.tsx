@@ -2,10 +2,25 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import { Analytics } from '@vercel/analytics/react';
+import { useRouter } from 'next/router';
 import Sidebar from '../components/sidebar';
 import Header from '../components/header';
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+  const isDashboard = router.pathname === '/dashboard';
+
+  if (isDashboard) {
+    // Fullscreen dashboard with no wrapper
+    return (
+      <div className="dark">
+        <Component {...pageProps} />
+        <Analytics />
+      </div>
+    );
+  }
+
+  // Regular layout for other pages
   return (
     <div className="dark">
       <div className="flex flex-col min-h-screen fixed inset-0 overflow-hidden text-foreground">
