@@ -1,0 +1,227 @@
+name: Setup repository from template
+
+on:
+  workflow_dispatch:
+    inputs:
+      visibility:
+        description: 'Visibility'
+        required: true
+        default: 'private'
+        type: choice
+        options:
+        - private
+        - public
+      python:
+        description: 'Python/Jupyter Notebook'
+        required: true
+        default: false
+        type: boolean
+      javascript:
+        description: 'TypeScript/JavaScript'
+        required: true
+        default: false
+        type: boolean
+      terraform:
+        description: 'Terraform'
+        required: true
+        default: false
+        type: boolean
+      golang:
+        description: 'Go'
+        required: true
+        default: false
+        type: boolean
+      vercel:
+        description: 'Vercel'
+        required: true
+        default: false
+        type: boolean
+jobs:
+  common-setup:
+    name: Common Setup
+    outputs:
+      run_jobs: ${{ steps.check-template.outputs.run_jobs}}
+    runs-on: ubuntu-22.04
+    env:
+      REPO_SETUP_TOKEN: ${{ secrets.REPO_SETUP_TOKEN }}
+    steps:
+      - name: Do not run setup on template repository
+        id: check-template
+        shell: bash {0}
+        # Using the GitHub rest API allows us to identify if the current repository
+        # is a template repository or not.
+        run: |
+          not_template=$(curl --silent -X GET -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github+json" https://api.github.com/repos/$GITHUB_REPOSITORY | jq --exit-status '.is_template == false');
+          echo "run_jobs=$not_template" >> $GITHUB_OUTPUT
+      - uses: actions/checkout@v3
+        with:
+          # Cannot use the built-in $GITHUB_TOKEN since we need webhook permission
+          token: ${{ env.REPO_SETUP_TOKEN }}
+
+      ### RESTRICT RUNNABLE GITHUB ACTIONS
+      - name: Set runnable actions to 'selected'
+        shell: bash
+        run: |
+          curl -X PUT -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${{ env.REPO_SETUP_TOKEN }}" -H "X-GitHub-Api-Version: 2022-11-28" https://api.github.com/repos/$GITHUB_REPOSITORY/actions/permissions -d '{"enabled":true,"allowed_actions":"selected"}'
+      - name: Restrict runnable actions
+        shell: bash
+        run: |
+          curl -X PUT -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${{ env.REPO_SETUP_TOKEN }}" -H "X-GitHub-Api-Version: 2022-11-28" https://api.github.com/repos/$GITHUB_REPOSITORY/actions/permissions/selected-actions -d '{"github_owned_allowed":true,"verified_allowed":false,"patterns_allowed":["aws-actions/amazon-ecr-login@v1", "aws-actions/configure-aws-credentials@v2", "trufflesecurity/trufflehog@v3.26.0", "returntocorp/semgrep", "tenable/terrascan-action@main"]}'
+
+      ### PYTHON SETUP
+      - name: python-setup
+        if: ${{ inputs.python && steps.check-template.outputs.run_jobs == 'true' }}
+        shell: bash
+        # Copy the bandit action workflow file to the appropriate location
+        run: |
+          cp template-files/python/bandit-ci.yml .github/workflows/bandit-ci.yml
+          cat template-files/python/.gitignore >> .gitignore
+
+      ### JS/TS SETUP
+      - name: javascript-setup
+        if: ${{ inputs.javascript && steps.check-template.outputs.run_jobs == 'true' }}
+        shell: bash
+        run: |
+          cat template-files/js/.gitignore >> .gitignore
+
+      ### TERRAFORM SETUP
+      - name: terraform-setup
+        if: ${{ inputs.terraform && steps.check-template.outputs.run_jobs == 'true' }}
+        shell: bash
+        run: |
+          cat template-files/terraform/.gitignore >> .gitignore
+          cp template-files/terraform/atlantis.yaml atlantis.yaml
+          cp template-files/terraform/terrascan-ci.yml .github/workflows/terrascan-ci.yml
+
+      ### TEMPLATE FILE
+      - name: move-template-file
+        if: ${{ github.event.inputs.terraform == 'true' || github.event.inputs.python == 'true' }}
+        id: move-output-template
+        shell: bash
+        # Copy the logging template file to the workflows folder
+        run: |
+          cp template-files/common/output-template.json .github/workflows/output-template.json
+
+      ### GOLANG SETUP
+      - name: golang-setup
+        if: ${{ inputs.golang && steps.check-template.outputs.run_jobs == 'true' }}
+        shell: bash
+        run: |
+          cat template-files/go/.gitignore >> .gitignore
+
+      - name: commit-job-changes
+        shell: bash {0}
+        # Commit the changes we've made for this job since artifacting all of them would be difficult
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com" && \
+          git config --global user.name "github-actions[bot]" && \
+          git add --all
+          if ! git diff-index --quiet HEAD; then
+            git commit -m 'Repository Setup'
+            git push origin main -f
+          fi
+
+  cleanup:
+    name: Cleanup
+    needs: [common-setup]
+    if: ${{ needs.common-setup.outputs.run_jobs == 'true' }}
+    env:
+      REPO_SETUP_TOKEN: ${{ secrets.REPO_SETUP_TOKEN }}
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # Cannot use the built-in $GITHUB_TOKEN since we need webhook permission
+          token: ${{ env.REPO_SETUP_TOKEN }}
+          # include the ref to the default branch so we get the changes from the previous jobs
+          ref: main
+      - name: Clean up template files
+        shell: bash
+        run: |
+          rm -rf template-files
+          rm -f .github/workflows/setup-repository.yml
+      - name: Reinitialize git repository
+        shell: bash
+        # We use `git checkout --orphan` to create a branch in a git init-like state and get a clean history
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com" && \
+          git config --global user.name "github-actions[bot]" && \
+          git checkout --orphan temp-branch && \
+          git add . && \
+          git commit -m 'Repository Setup' && \
+          git push origin temp-branch:main -f
+      - name: Protect main branch
+        shell: bash
+        run: |
+          curl -X PUT -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${{ env.REPO_SETUP_TOKEN }}" -H "X-GitHub-Api-Version: 2022-11-28" https://api.github.com/repos/$GITHUB_REPOSITORY/branches/main/protection -d '{"required_status_checks":null,"enforce_admins":null,"required_pull_request_reviews":{"dismissal_restrictions":{"users":[],"teams":[],"apps":[]},"dismiss_stale_reviews":false,"require_code_owner_reviews":false,"required_approving_review_count":1,"require_last_push_approval":false,"bypass_pull_request_allowances":{"users":[],"teams":["security-eng","platform-eng"]}},"restrictions":null,"required_linear_history":false,"allow_force_pushes":false,"allow_deletions":false,"block_creations":false,"required_conversation_resolution":true,"lock_branch":false,"allow_fork_syncing":false}'
+      ### This must be done at the end of the workflow after all changes have been committed due to org-wide restrictions
+      ### SEMGREP SETUP USING REPOSITORY RULESETS
+      ### DEPRECATED SINCE SEMGREP IS AUTO-CONFIGURED FOR ALL REPOS EXCEPT TERRACODE-*
+      # - name: install-semgrep-action
+        # if: ${{ github.event.inputs.semgrep == 'true' }}
+        # id: install-semgrep-action
+        # shell: bash
+        # # id 279250 represents semgrep ruleset
+        # # ids_cleaned is a necessary step, since bash naturally delimits by newline, which breaks single-line read
+        # run: |
+        #   raw=$(curl -L -X GET \
+        #     -H "Accept: application/vnd.github+json" \
+        #     -H "Authorization: Bearer ${{ env.REPO_SETUP_TOKEN }}" \
+        #     -H "X-GitHub-Api-Version: 2022-11-28" \
+        #     https://api.github.com/orgs/scaleapi/rulesets/279250)
+        #   ids=$(echo "$raw" | jq '.conditions.repository_id.repository_ids[]?')
+        #   ids_cleaned=${ids//$'\n'/ }
+        #   ids_cleaned=${ids_cleaned//$'\r'/ }
+        #   refs=$(echo "$raw" | jq '.conditions.ref_name')
+        #   names=$(echo "$raw" | jq '.conditions.repository_name.include')
+        #   read -a id_array <<< $ids_cleaned
+        #   echo 'Beginning with '${#id_array[*]}' repositories.'
+        #   id_array+=(${{ github.repository_id }})
+        #   echo 'Now there are '${#id_array[*]}' repositories.'
+        #   json_ids=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${id_array[@]}" | tr -d "\"")
+        #   body=$(echo '{"conditions": { "ref_name": '$refs', "repository_id": {"repository_ids": '"${json_ids//\" /}"'}}}')
+        #   curl -L -X PUT \
+        #     -H "Accept: application/vnd.github+json" \
+        #     -H "Authorization: Bearer ${{ env.REPO_SETUP_TOKEN }}" \
+        #     -H "X-GitHub-Api-Version: 2022-11-28" \
+        #     https://api.github.com/orgs/scaleapi/rulesets/279250 \
+        #     -d "$body"
+      ### TRUFFLEHOG SETUP USING REPOSITORY RULESETS
+      ### DEPRECATED
+      # - name: install-trufflehog-action
+        # if: ${{ github.event.inputs.trufflehog == 'true' }}
+        # id: install-trufflehog-action
+        # shell: bash
+        # # id 279251 represents trufflehog ruleset
+        # # ids_cleaned is a necessary step, since bash naturally delimits by newline, which breaks single-line read
+        # run: |
+        #   raw=$(curl -L -X GET \
+        #     -H "Accept: application/vnd.github+json" \
+        #     -H "Authorization: Bearer ${{ env.REPO_SETUP_TOKEN }}" \
+        #     -H "X-GitHub-Api-Version: 2022-11-28" \
+        #     https://api.github.com/orgs/scaleapi/rulesets/279251)
+        #   ids=$(echo "$raw" | jq '.conditions.repository_id.repository_ids[]?')
+        #   ids_cleaned=${ids//$'\n'/ }
+        #   ids_cleaned=${ids_cleaned//$'\r'/ }
+        #   refs=$(echo "$raw" | jq '.conditions.ref_name')
+        #   names=$(echo "$raw" | jq '.conditions.repository_name.include')
+        #   read -a id_array <<< $ids_cleaned
+        #   id_array+=(${{ github.repository_id }})
+        #   json_ids=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${id_array[@]}" | tr -d "\"")
+        #   body=$(echo '{"conditions": { "ref_name": '$refs', "repository_id": {"repository_ids": '"${json_ids//\" /}"'}}}')
+        #   curl -L -X PUT \
+        #     -H "Accept: application/vnd.github+json" \
+        #     -H "Authorization: Bearer ${{ env.REPO_SETUP_TOKEN }}" \
+        #     -H "X-GitHub-Api-Version: 2022-11-28" \
+        #     https://api.github.com/orgs/scaleapi/rulesets/279251 \
+        #     -d "$body"
+      - name: Remove secret REPO_SETUP_TOKEN
+        # After re-initializing the repository, we can remove the `REPO_SETUP_TOKEN` secret since it has permissions we don't want to sit around in the repository
+        shell: bash
+        if: ${{ env.REPO_SETUP_TOKEN }}
+        run: |
+          curl \
+            -X DELETE --fail \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: Bearer ${{ env.REPO_SETUP_TOKEN }}" \
+            https://api.github.com/repos/$GITHUB_REPOSITORY/actions/secrets/REPO_SETUP_TOKEN

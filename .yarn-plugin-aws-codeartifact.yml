@@ -1,0 +1,15 @@
+npmScopes:
+  fortawesome:
+    npmRegistryServerConfig:
+      awsProfile: production-developer
+      preferAwsEnvironmentCredentials: true
+    npmPublishRegistryConfig:
+      awsProfile: production-developer
+      preferAwsEnvironmentCredentials: true
+  scale:
+    npmRegistryServerConfig:
+      awsProfile: production-developer
+      preferAwsEnvironmentCredentials: true
+    npmPublishRegistryConfig:
+      awsProfile: production-developer
+      preferAwsEnvironmentCredentials: true

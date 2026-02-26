@@ -1,0 +1,50 @@
+/* styles/globals.css */
+
+/* Apply border-box to all elements for consistent spacing */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Dark background and better contrast */
+body {
+    background-color: #000;
+    color: #fff;
+    font-family: sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Ensure buttons and inputs don't lose focus effects */
+button, input {
+    outline: none;
+    border: none;
+}
+
+/* Allow Radix's styling for hover effects */
+button:hover, 
+[data-state="open"] {
+    opacity: 1 !important;
+}
+
+/* Fixing the hover effect visibility */
+[data-highlighted] {
+    background-color: #7B61FF !important;
+    color: white !important;
+}
+
+/* Ensure Radix dropdown scrolls */
+[data-radix-popper-content-wrapper] {
+    overflow-y: auto !important;
+    border-radius: 8px;
+}
+
+/* A simple utility class for gradient text */
+.gradient-title {
+    background: linear-gradient(90deg, #A084DC, #FF63B6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
