@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Activity, Droplets, Thermometer, Gauge, AlertTriangle } from 'lucide-react';
+import { Activity, Droplets, Thermometer, Gauge, AlertTriangle, Search, Zap } from 'lucide-react';
 
 // Mock data for 8 production lines
 const PRODUCTION_LINES = [
@@ -17,58 +17,59 @@ const PRODUCTION_LINES = [
 
 export default function Home() {
   const router = useRouter();
-  const [lines, setLines] = useState(PRODUCTION_LINES);
-  const [showAlert, setShowAlert] = useState(false);
-  const [countdown, setCountdown] = useState(3);
+
+  // Set Line 3 as stopped
+  const lines = PRODUCTION_LINES.map(line =>
+    line.id === 3
+      ? { ...line, status: "stopped", throughput: 0, pressure: 242, temp: 134 }
+      : line
+  );
 
   const totalThroughput = lines.reduce((sum, line) => sum + line.throughput, 0);
-
-  const simulateLineStop = () => {
-    setShowAlert(true);
-
-    // Countdown before transitioning
-    const countdownInterval = setInterval(() => {
-      setCountdown(prev => {
-        if (prev <= 1) {
-          clearInterval(countdownInterval);
-          // Navigate to investigation after countdown
-          setTimeout(() => {
-            router.push('/investigation');
-          }, 500);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    // Update Line 3 status
-    setTimeout(() => {
-      setLines(prevLines =>
-        prevLines.map(line =>
-          line.id === 3
-            ? { ...line, status: "stopped", throughput: 0, pressure: 242, temp: 134 }
-            : line
-        )
-      );
-    }, 500);
-  };
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100">
       {/* Header */}
-      <header className="border-b border-slate-700 bg-slate-800 px-6 py-4">
-        <div className="flex items-center justify-between">
+      <header className="border-b border-slate-700 bg-slate-800">
+        <div className="px-6 py-4 flex items-center justify-between border-b border-slate-700">
           <div>
-            <h1 className="text-3xl font-bold text-cyan-400">ETHER-EYE MONITORING SYSTEM</h1>
-            <p className="text-slate-300 mt-1">Real-time production line monitoring</p>
-          </div>
-          <div className="text-right">
-            <p className="text-sm text-slate-400">System Status</p>
-            <div className="flex items-center gap-2 mt-1">
-              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-              <p className="text-xl font-bold text-green-400">ALL SYSTEMS OPERATIONAL</p>
+            <div className="flex items-center gap-3">
+              <AlertTriangle className="w-8 h-8 text-red-500 animate-pulse" />
+              <div>
+                <h1 className="text-2xl font-bold text-red-400">INCIDENT #2847</h1>
+                <p className="text-slate-300 mt-1">Line 3 - Aseptic Fill Station Alpha | Stopped: 14:23:47 PST</p>
+              </div>
             </div>
           </div>
+          <div className="text-right">
+            <p className="text-sm text-slate-400">Elapsed Time</p>
+            <p className="text-3xl font-bold text-red-400 font-mono">00:04:23</p>
+            <p className="text-sm text-amber-400 mt-1">Cost: $21,915</p>
+          </div>
+        </div>
+
+        {/* Navigation Tabs */}
+        <div className="px-6 flex gap-1">
+          <button
+            className="px-6 py-3 text-cyan-400 bg-slate-900 border-t-2 border-cyan-400 font-semibold rounded-t-lg"
+          >
+            <Activity className="w-4 h-4 inline mr-2" />
+            Monitoring
+          </button>
+          <button
+            onClick={() => router.push('/investigation')}
+            className="px-6 py-3 text-slate-400 hover:text-slate-300 hover:bg-slate-700/50 transition-colors rounded-t-lg"
+          >
+            <Search className="w-4 h-4 inline mr-2" />
+            Investigation
+          </button>
+          <button
+            onClick={() => router.push('/dashboard')}
+            className="px-6 py-3 text-slate-400 hover:text-slate-300 hover:bg-slate-700/50 transition-colors rounded-t-lg"
+          >
+            <Zap className="w-4 h-4 inline mr-2" />
+            Recovery Plan
+          </button>
         </div>
       </header>
 
@@ -183,60 +184,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Demo Control */}
-        <div className="bg-gradient-to-r from-slate-800/50 to-slate-900 rounded-xl p-8 shadow-lg text-center">
-          <h2 className="text-2xl font-bold mb-4 text-white">DEMO CONTROL PANEL</h2>
-          <p className="text-slate-400 mb-6">Click below to simulate a Loss of Sterility (LOS) event on Line 3</p>
-          <button
-            onClick={simulateLineStop}
-            disabled={showAlert}
-            className={`px-12 py-5 rounded-xl font-bold text-xl transition-all transform hover:scale-105 ${
-              showAlert
-                ? 'bg-slate-700 text-slate-500 cursor-not-allowed'
-                : 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-xl shadow-red-500/50'
-            }`}
-          >
-            {showAlert ? `INCIDENT TRIGGERED - REDIRECTING IN ${countdown}...` : '🚨 SIMULATE LINE-STOP EVENT'}
-          </button>
-        </div>
       </div>
-
-      {/* Alert Modal */}
-      {showAlert && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 animate-in fade-in">
-          <div className="bg-gradient-to-br from-red-950 to-slate-900 border-2 border-red-500 rounded-2xl p-12 max-w-2xl mx-4 shadow-2xl animate-in zoom-in">
-            <div className="flex items-center gap-4 mb-6">
-              <AlertTriangle className="w-16 h-16 text-red-500 animate-pulse" />
-              <div>
-                <h2 className="text-4xl font-bold text-red-400">LOSS OF STERILITY DETECTED</h2>
-                <p className="text-xl text-slate-300 mt-2">Line 3 - Aseptic Fill Station Alpha</p>
-              </div>
-            </div>
-
-            <div className="bg-black/40 rounded-lg p-6 mb-6">
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                  <p className="text-lg text-slate-300">Automatic line shutdown initiated</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                  <p className="text-lg text-slate-300">Engaging Ether-Eye diagnostic system</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 bg-cyan-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-                  <p className="text-lg text-slate-300">Analyzing 55,000 sensor data points</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="text-center">
-              <p className="text-3xl font-bold text-red-400 mb-2">Estimated Cost: $5,000/minute</p>
-              <p className="text-slate-400">Redirecting to incident dashboard in {countdown} seconds...</p>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
