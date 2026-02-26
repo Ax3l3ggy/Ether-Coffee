@@ -8,9 +8,6 @@ import {
   FileText,
   Activity,
   Zap,
-  Droplet,
-  Thermometer,
-  Gauge,
   Clock,
   ArrowRight,
   Lightbulb
@@ -104,13 +101,10 @@ export default function Investigation() {
   const router = useRouter();
   const [selectedSensor, setSelectedSensor] = useState<string | null>("PT-4472");
   const [activeTab, setActiveTab] = useState<"sensors" | "sops" | "history">("sensors");
-  const [chatQuery, setChatQuery] = useState("");
   const [chatResponse, setChatResponse] = useState("");
   const [showInsight, setShowInsight] = useState(false);
 
   const handleAskQuestion = (question: string) => {
-    setChatQuery(question);
-
     // Simulated AI responses
     if (question.includes("steam pressure") || question.includes("PT-4472")) {
       setChatResponse("According to Technical Manual TM-4472 (Section 3.2.4, Page 87):\n\n**Zone 4 Steam Pressure Requirements:**\n• Operating range: 285-295 PSI\n• Critical threshold: 280 PSI (triggers alarm)\n• Sterility compromise: <275 PSI for >30 seconds\n\n**Current reading: 242 PSI** - This is 43 PSI below critical threshold and represents a 15% deviation from target.\n\n**Common causes:**\n1. Steam trap blockage (78% of historical cases)\n2. Boiler supply issue (15% of cases)\n3. Valve malfunction (7% of cases)");
@@ -301,7 +295,7 @@ export default function Investigation() {
                   <div className="bg-slate-900/50 rounded-lg p-4">
                     <p className="text-sm font-semibold text-slate-400 mb-3">LAST 8 READINGS</p>
                     <div className="flex items-end justify-between h-32 gap-2">
-                      {SENSOR_DATA[selectedSensor].history.map((value: any, idx: number) => {
+                      {SENSOR_DATA[selectedSensor].history.map((value: number | string, idx: number) => {
                         const maxVal = Array.isArray(SENSOR_DATA[selectedSensor].normal)
                           ? SENSOR_DATA[selectedSensor].normal[1]
                           : 300;
@@ -479,7 +473,7 @@ export default function Investigation() {
                 onClick={() => handleAskQuestion("What's the normal steam pressure for PT-4472?")}
                 className="w-full text-left bg-slate-700/50 hover:bg-slate-700 rounded-lg p-3 text-sm transition-all"
               >
-                What's the normal steam pressure for PT-4472?
+                What&apos;s the normal steam pressure for PT-4472?
               </button>
               <button
                 onClick={() => handleAskQuestion("Where is steam trap ST-447 located?")}
