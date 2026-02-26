@@ -31,9 +31,9 @@ export default function Home() {
       setCountdown(prev => {
         if (prev <= 1) {
           clearInterval(countdownInterval);
-          // Navigate to dashboard after countdown
+          // Navigate to investigation after countdown
           setTimeout(() => {
-            router.push('/dashboard');
+            router.push('/investigation');
           }, 500);
           return 0;
         }
