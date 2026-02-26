@@ -8,7 +8,7 @@ import Header from '../components/header';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  const isFullscreen = router.pathname === '/dashboard' || router.pathname === '/monitoring';
+  const isFullscreen = router.pathname === '/dashboard' || router.pathname === '/monitoring' || router.pathname === '/';
 
   if (isFullscreen) {
     // Fullscreen pages with no wrapper
